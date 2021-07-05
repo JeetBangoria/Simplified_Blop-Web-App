@@ -1,4 +1,5 @@
 const express = require("express");
+const bcrypt = require('bcrypt')
 const ejs = require("ejs");
 const app = express();
 const fileUpload = require('express-fileupload')
@@ -41,45 +42,38 @@ app.get("/about", (req, res) => {
   res.render("about");
 });
 
-app.get('/post/:id', async (req, res) => {
+app.get("/post", (req, res) => {
+  res.render("samplePost");
+});
+
+app.get("/auth/register", (req, res) => {
+  res.render("register");
+});
+
+app.get('/post/:id', async (req, res) => {  // : HERE REPRESENTS ANY NUMBER OF CHARACTER (ID)
   const blogpost = await BlogPost.findById(req.params.id);
   res.render("post", {
     blogpost
   });
 });
 
+// Above form is simplified into below form using Middleware
+
 const newPostController = require('./controllers/newPost')
 app.get('/posts/new',newPostController);
 
+const getAllPostController = require('./controllers/getAllPost')
+app.get('/', getAllPostController)
+
 //Validation Middleware
+const validationController = require('./controllers/validation')
+app.use('/posts/store',validationController)
 
-const validation = (req, res, next) => {
-  if (req.files == null || req.body.title == null || req.body.title == null) {
-    return res.redirect('/posts/new')
-  }
-  next()
-}
+const storeDataController = require('./controllers/storeData')
+app.post('/posts/store', storeDataController)
 
-app.use('/posts/store',validation)
-
-app.post('/posts/store', async (req, res) => {
-  let image = req.files.image;
-  image.mv(path.resolve(__dirname, 'public/img', image.name), async (error) => {
-    console.log(req.body);
-    await BlogPost.create({
-      ...req.body,
-      image: '/img/' + image.name
-    })
-    res.redirect('/')
-  })
-})
-
-app.get('/', async (req, res) => {
-  const blogposts = await BlogPost.find({})
-  res.render('index', {
-    blogposts: blogposts
-  });
-})
+const storeUserController = require('./controllers/storeUser')
+app.post('/user/register', storeUserController)
 
 app.listen(4000, () => {
   console.log("This App is on port = 4000");
