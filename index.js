@@ -1,22 +1,18 @@
+// Required Modules
 const express = require("express");
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
 const ejs = require("ejs");
-const app = express();
-const fileUpload = require('express-fileupload')
-var bodyParser = require('body-parser');
+const fileUpload = require('express-fileupload');
+const bodyParser = require('body-parser');
 const path = require("path");
-
-const viewPath = path.join(__dirname, "/views")
-
-app.use(fileUpload())
-
-app.use(express.static(path.join(__dirname, 'public')));
-app.set("view engine", "ejs");
-app.set('views', viewPath);
-
+const expressSession = require('express-session');
 const BlogPost = require('./models/BlogPost.js')
 const mongoose = require('mongoose');
 mongoose.connect("mongodb://localhost/my_database", { useNewUrlParser: true });
+
+const app = express();
+
+app.use(fileUpload());
 
 app.use(express.json());
 app.use(express.urlencoded({
@@ -25,6 +21,16 @@ app.use(express.urlencoded({
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(expressSession({
+  secret: 'keyboard cat'
+}))
+
+const viewPath = path.join(__dirname, "/views")
+app.use(express.static(path.join(__dirname, 'public')));
+app.set("view engine", "ejs");
+app.set('views', viewPath);
+
 
 app.get("/", async (req, res) => {
   const blogposts = await BlogPost.find({})
@@ -74,6 +80,12 @@ app.post('/posts/store', storeDataController)
 
 const storeUserController = require('./controllers/storeUser')
 app.post('/user/register', storeUserController)
+
+const loginController = require('./controllers/login')
+app.get('/auth/login',loginController)
+
+const loginUserController = require('./controllers/loginUser')
+app.post('/user/login',loginUserController)
 
 app.listen(4000, () => {
   console.log("This App is on port = 4000");
