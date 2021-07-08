@@ -62,9 +62,8 @@ app.get("/post", (req, res) => {
   res.render("samplePost");
 });
 
-app.get("/auth/register",redirectIfAuthenticatedMiddleware, (req, res) => {
-  res.render("register");
-});
+const newUserController = require('./controllers/newUser')
+app.get("/auth/register",redirectIfAuthenticatedMiddleware, newUserController);
 
 app.get('/post/:id', async (req, res) => {  // : HERE REPRESENTS ANY NUMBER OF CHARACTER (ID)
   const blogpost = await BlogPost.findById(req.params.id);
