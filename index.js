@@ -41,14 +41,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set("view engine", "ejs");
 app.set('views', viewPath);
 
-
-app.get("/", async (req, res) => {
-  const blogposts = await BlogPost.find({})
-  res.render("index", {
-    blogposts
-  });
-  console.log(blogposts)
-});
+const homeController = require('./controllers/home')
+app.get("/",homeController);
 
 app.get("/contact", (req, res) => {
   res.render("contact");
@@ -65,12 +59,7 @@ app.get("/post", (req, res) => {
 const newUserController = require('./controllers/newUser')
 app.get("/auth/register",redirectIfAuthenticatedMiddleware, newUserController);
 
-app.get('/post/:id', async (req, res) => {  // : HERE REPRESENTS ANY NUMBER OF CHARACTER (ID)
-  const blogpost = await BlogPost.findById(req.params.id);
-  res.render("post", {
-    blogpost
-  });
-});
+app.get('/post/:id', );
 
 // Above form is simplified into below form using Middleware
 
@@ -82,10 +71,8 @@ app.get('/', getAllPostController)
 
 //Validation Middleware
 const validationController = require('./controllers/validation')
-app.use('/posts/store',validationController)
-
 const storeDataController = require('./controllers/storeData')
-app.post('/posts/store', storeDataController)
+app.post('/posts/store',validationController, storeDataController)
 
 const storeUserController = require('./controllers/storeUser')
 app.post('/user/register',redirectIfAuthenticatedMiddleware, storeUserController)

@@ -25,11 +25,10 @@
                     <div class="post-preview">
                         <a href="/post/<%=blogposts[i]._id%>">
                             <h2 class="post-title"><%= blogposts[i].title %></h2>
-                            <!--h3 class="post-subtitle"><%= blogposts[i].body %></h3-->
                         </a>
                         <p class="post-meta">
                             Posted by
-                            <a href="#"><%= blogposts[i].username %></a>
+                            <a href="#"><%= blogposts[i].userid.username%></a> <br>
                             <%= blogposts[i].datePosted.toDateString() %>
                         </p>
                     </div>
