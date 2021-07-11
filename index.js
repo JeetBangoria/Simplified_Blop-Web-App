@@ -7,9 +7,9 @@ const bodyParser = require('body-parser');
 const path = require("path");
 const expressSession = require('express-session');
 const flash = require('connect-flash');
-const BlogPost = require('../models/BlogPost.js');
-const authMiddleware = require('../middleware/authMiddleware.js');
-const redirectIfAuthenticatedMiddleware = require('../middleware/redirectIfAuthenticatedMiddleware')
+const BlogPost = require('./models/BlogPost.js');
+const authMiddleware = require('./middleware/authMiddleware.js');
+const redirectIfAuthenticatedMiddleware = require('./middleware/redirectIfAuthenticatedMiddleware')
 const mongoose = require('mongoose');
 mongoose.connect("mongodb+srv://newUser1:31password08@blogcluster.hpvfy.mongodb.net/MyDatabase?retryWrites=true&w=majority", { useNewUrlParser: true });
 const app = express();
@@ -41,7 +41,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set("view engine", "ejs");
 app.set('views', viewPath);
 
-const homeController = require('../controllers/home')
+const homeController = require('./controllers/home')
 app.get("/", homeController);
 
 app.get("/contact", (req, res) => {
@@ -56,35 +56,35 @@ app.get("/post", (req, res) => {
   res.render("samplePost");
 });
 
-const getPostController = require('../controllers/getPost')
+const getPostController = require('./controllers/getPost')
 app.get('/post/:id', getPostController);
 
 // Above form is simplified into below form using Middleware
 
-const newPostController = require('../controllers/newPost')
+const newPostController = require('./controllers/newPost')
 app.get('/posts/new', authMiddleware, newPostController);
 
-const getAllPostController = require('../controllers/getAllPost')
+const getAllPostController = require('./controllers/getAllPost')
 app.get('/', getAllPostController);
 
 //Validation Middleware
-const validationController = require('../controllers/validation')
-const storeDataController = require('../controllers/storeData')
+const validationController = require('./controllers/validation')
+const storeDataController = require('./controllers/storeData')
 app.post('/posts/store', validationController, storeDataController)
 
-const newUserController = require('../controllers/newUser')
+const newUserController = require('./controllers/newUser')
 app.get("/auth/register", redirectIfAuthenticatedMiddleware, newUserController);
 
-const storeUserController = require('../controllers/storeUser')
+const storeUserController = require('./controllers/storeUser')
 app.post('/user/register', redirectIfAuthenticatedMiddleware, storeUserController)
 
-const loginController = require('../controllers/login')
+const loginController = require('./controllers/login')
 app.get('/auth/login', redirectIfAuthenticatedMiddleware, loginController)
 
-const loginUserController = require('../controllers/loginUser')
+const loginUserController = require('./controllers/loginUser')
 app.post('/user/login', redirectIfAuthenticatedMiddleware, loginUserController)
 
-const logoutController = require('../controllers/logout')
+const logoutController = require('./controllers/logout')
 app.get('/user/logout', logoutController)
 
 let port = process.env.PORT;
