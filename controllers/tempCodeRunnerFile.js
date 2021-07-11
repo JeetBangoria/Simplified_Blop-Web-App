@@ -1,1 +1,0 @@
- req.session.userId

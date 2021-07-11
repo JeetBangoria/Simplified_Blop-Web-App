@@ -6,12 +6,14 @@ const fileUpload = require('express-fileupload');
 const bodyParser = require('body-parser');
 const path = require("path");
 const expressSession = require('express-session');
+const flash = require('connect-flash');
 const BlogPost = require('./models/BlogPost.js');
 const authMiddleware = require('./middleware/authMiddleware.js');
 const redirectIfAuthenticatedMiddleware = require('./middleware/redirectIfAuthenticatedMiddleware')
 const mongoose = require('mongoose');
-mongoose.connect("mongodb://localhost/my_database", { useNewUrlParser: true });
+mongoose.connect("mongodb+srv://newUser1:31password08@blogcluster.hpvfy.mongodb.net/MyDatabase?retryWrites=true&w=majority", { useNewUrlParser: true });
 const app = express();
+app.use(flash());
 
 global.loggedIn = null;
 
@@ -34,15 +36,13 @@ app.use(express.urlencoded({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-
 const viewPath = path.join(__dirname, "/views")
 app.use(express.static(path.join(__dirname, 'public')));
 app.set("view engine", "ejs");
 app.set('views', viewPath);
 
 const homeController = require('./controllers/home')
-app.get("/",homeController);
+app.get("/", homeController);
 
 app.get("/contact", (req, res) => {
   res.render("contact");
@@ -56,16 +56,13 @@ app.get("/post", (req, res) => {
   res.render("samplePost");
 });
 
-const newUserController = require('./controllers/newUser')
-app.get("/auth/register",redirectIfAuthenticatedMiddleware, newUserController);
-
 const getPostController = require('./controllers/getPost')
 app.get('/post/:id', getPostController);
 
 // Above form is simplified into below form using Middleware
 
 const newPostController = require('./controllers/newPost')
-app.get('/posts/new',authMiddleware,newPostController);
+app.get('/posts/new', authMiddleware, newPostController);
 
 const getAllPostController = require('./controllers/getAllPost')
 app.get('/', getAllPostController);
@@ -73,22 +70,29 @@ app.get('/', getAllPostController);
 //Validation Middleware
 const validationController = require('./controllers/validation')
 const storeDataController = require('./controllers/storeData')
-app.post('/posts/store',validationController, storeDataController)
+app.post('/posts/store', validationController, storeDataController)
+
+const newUserController = require('./controllers/newUser')
+app.get("/auth/register", redirectIfAuthenticatedMiddleware, newUserController);
 
 const storeUserController = require('./controllers/storeUser')
-app.post('/user/register',redirectIfAuthenticatedMiddleware, storeUserController)
+app.post('/user/register', redirectIfAuthenticatedMiddleware, storeUserController)
 
 const loginController = require('./controllers/login')
-app.get('/auth/login',redirectIfAuthenticatedMiddleware,loginController)
+app.get('/auth/login', redirectIfAuthenticatedMiddleware, loginController)
 
 const loginUserController = require('./controllers/loginUser')
-app.post('/user/login',redirectIfAuthenticatedMiddleware,loginUserController)
+app.post('/user/login', redirectIfAuthenticatedMiddleware, loginUserController)
 
 const logoutController = require('./controllers/logout')
-app.get('/user/logout',logoutController)
+app.get('/user/logout', logoutController)
 
-app.listen(4000, () => {
-  console.log("This App is on port = 4000");
-});
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 4000;
+}
+app.listen(port, ()=>{
+console.log('App listening...')
+})
 
 app.use((req, res) => res.render('notfound'));
