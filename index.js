@@ -59,7 +59,8 @@ app.get("/post", (req, res) => {
 const newUserController = require('./controllers/newUser')
 app.get("/auth/register",redirectIfAuthenticatedMiddleware, newUserController);
 
-app.get('/post/:id', );
+const getPostController = require('./controllers/getPost')
+app.get('/post/:id', getPostController);
 
 // Above form is simplified into below form using Middleware
 
@@ -67,7 +68,7 @@ const newPostController = require('./controllers/newPost')
 app.get('/posts/new',authMiddleware,newPostController);
 
 const getAllPostController = require('./controllers/getAllPost')
-app.get('/', getAllPostController)
+app.get('/', getAllPostController);
 
 //Validation Middleware
 const validationController = require('./controllers/validation')
