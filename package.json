@@ -15,12 +15,15 @@
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
     "connect-flash": "^0.1.1",
+    "dotenv": "^10.0.0",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
     "express-session": "^1.17.2",
     "express-sessions": "^1.0.6",
     "mongoose": "^4.13.21",
+    "mongoose-beautiful-unique-validation": "^7.1.1",
+    "mongoose-unique-validation": "^0.1.0",
     "nodemon": "^2.0.9",
     "path": "^0.12.7"
   }

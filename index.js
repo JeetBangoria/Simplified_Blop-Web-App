@@ -1,5 +1,6 @@
 // Required Modules
 const express = require("express");
+require("dotenv").config();
 const bcrypt = require('bcrypt');
 const ejs = require("ejs");
 const fileUpload = require('express-fileupload');
@@ -11,7 +12,7 @@ const BlogPost = require('./models/BlogPost.js');
 const authMiddleware = require('./middleware/authMiddleware.js');
 const redirectIfAuthenticatedMiddleware = require('./middleware/redirectIfAuthenticatedMiddleware')
 const mongoose = require('mongoose');
-mongoose.connect("mongodb+srv://newUser1:31password08@blogcluster.hpvfy.mongodb.net/MyDatabase?retryWrites=true&w=majority", { useNewUrlParser: true });
+mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true });
 const app = express();
 app.use(flash());
 
