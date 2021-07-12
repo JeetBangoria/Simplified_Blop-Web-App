@@ -87,10 +87,7 @@ app.post('/user/login', redirectIfAuthenticatedMiddleware, loginUserController)
 const logoutController = require('./controllers/logout')
 app.get('/user/logout', logoutController)
 
-let port = process.env.PORT;
-if (port == null || port == "") {
-  port = 4000;
-}
+let port = process.env.PORT||4000
 app.listen(port, ()=>{
 console.log('App listening...')
 })
