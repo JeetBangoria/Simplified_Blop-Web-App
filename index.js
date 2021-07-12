@@ -12,10 +12,6 @@ const authMiddleware = require('./middleware/authMiddleware.js');
 const redirectIfAuthenticatedMiddleware = require('./middleware/redirectIfAuthenticatedMiddleware')
 const app = express();
 
-app.listen(4000, () => {
-  console.log("This App is on port = 4000");
-});
-
 
 const uri = "mongodb+srv://user:blogpassword@clusterblog.hpvfy.mongodb.net/my_database?retryWrites=true&w=majority"
 const options = {
@@ -100,3 +96,8 @@ const logoutController = require('./controllers/logout')
 app.get('/user/logout',logoutController)
 
 app.use((req, res) => res.render('notfound'));
+
+const port = process.env.PORT || 4000;
+app.listen(port, () => {
+  console.log("App started ...");
+});
